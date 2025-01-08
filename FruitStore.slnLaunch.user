@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "FruitStore.API\\FruitStore.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "FruitStore.Web\\FruitStore.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

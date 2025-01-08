@@ -1,0 +1,65 @@
+﻿@page "/fruit"
+@using Flurl.Http
+@inject NavigationManager navigationManager
+
+<PageTitle>Fruit Store</PageTitle>
+
+<h3>Fruit Store</h3>
+
+<a href="/fruit/add" class="btn btn-primary">Add new</a>
+<hr />
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <td>No.</td>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int index = 1; }
+        @foreach (var fruit in products)
+        {
+            <tr>
+                <td>@index</td>
+                <td>@fruit.Name</td>
+                <td>@fruit.CategoryName</td>
+                <td>@fruit.Price.ToString("N0")vnd</td>
+                <td>@fruit.Description</td>
+                <td>
+                    <a href="/fruit/update/@fruit.id" class="btn btn-success">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                    <a href="/fruit/delete/@fruit.id" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    <a href="/fruit/detail/@fruit.id" class="btn btn-outline-info">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            index += 1;
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<ProductResponse> products = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await "http://localhost:5192/api/products".GetJsonAsync<List<ProductResponse>>();
+    }
+
+    protected class ProductResponse
+    {
+        public Guid id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public string CategoryName { get; set; }
+    }
+}

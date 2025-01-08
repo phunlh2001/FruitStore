@@ -1,0 +1,27 @@
+﻿@page "/fruit/add"
+
+<PageTitle>Add new fruit</PageTitle>
+
+<h3>Add new fruit</h3>
+
+<form asp-action="Create" method="post">
+    Product Name: <input type="text" placeholder="Eg: Mango" class="form-control" />
+    <br />
+
+    Category:
+    <select asp-for="CategoryId" class="form-control"></select>
+    <br />
+
+    Price: <input type="number" placeholder="VND" class="form-control" />
+    <br />
+
+    Description: <input type="text" placeholder="Lorem..." class="form-control" />
+    <br />
+
+    <input type="submit" value="Create" class="btn btn-success">
+    <a href="/fruit" class="btn btn-outline-primary">Back to home</a>
+</form>
+
+@code {
+    
+}

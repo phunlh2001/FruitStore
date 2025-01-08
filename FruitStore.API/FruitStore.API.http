@@ -1,0 +1,10 @@
+@FruitStore.API_HostAddress = http://localhost:5192
+
+GET {{FruitStore.API_HostAddress}}/api/products/664e0927-ed5b-4f98-9a23-e361eefc7eab
+Accept: application/json
+
+###
+GET {{FruitStore.API_HostAddress}}/api/products/list
+Accept: application/json
+
+###

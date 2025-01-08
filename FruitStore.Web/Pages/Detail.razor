@@ -1,0 +1,37 @@
+﻿@page "/fruit/detail/{id}"
+@using Flurl.Http
+
+<PageTitle>View detail</PageTitle>
+
+<h3>View detail</h3>
+
+<dl>
+    <dt>@product?.Name</dt>
+    <dd>Category: @product?.CategoryName</dd>
+    <dd>Price: @product?.Price.ToString("N0")vnd</dd>
+    <dd>Description: @product?.Description</dd>
+    <dt>
+        <a href="/fruit" class="btn btn-outline-info">Back to home</a>
+    </dt>
+</dl>
+
+@code {
+    private ProductResponse? product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await $"http://localhost:5192/api/products/{Id}".GetJsonAsync<ProductResponse>();
+    }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected class ProductResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public string CategoryName { get; set; }
+    }
+}
