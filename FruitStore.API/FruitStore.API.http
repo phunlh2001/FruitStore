@@ -4,7 +4,7 @@ GET {{FruitStore.API_HostAddress}}/api/products/664e0927-ed5b-4f98-9a23-e361eefc
 Accept: application/json
 
 ###
-GET {{FruitStore.API_HostAddress}}/api/products/list
+GET {{FruitStore.API_HostAddress}}/api/products
 Accept: application/json
 
 ###

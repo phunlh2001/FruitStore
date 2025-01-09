@@ -1,10 +1,12 @@
 ﻿using FastEndpoints;
 using FruitStore.Application.DTOs;
+using MediatR;
 
 namespace FruitStore.API.Endpoints.Products
 {
-    public class CreateProduct : Endpoint<CreateProductRequest, ProductResponse>
+    public class CreateProduct(IMediator mediator) : Endpoint<CreateProductRequest, ProductResponse>
     {
+        private readonly IMediator _mediator = mediator;
         public override void Configure()
         {
             Post("/api/products/create");
@@ -14,16 +16,9 @@ namespace FruitStore.API.Endpoints.Products
 
         public override async Task HandleAsync(CreateProductRequest req, CancellationToken ct)
         {
-            var fakeData = new ProductResponse
-            {
-                Id = Guid.NewGuid(),
-                Name = req.Name,
-                CategoryName = req.CategoryName,
-                Description = req.Description,
-                Price = req.Price
-            };
+            var prod = await _mediator.Send(req, ct);
 
-            await SendAsync(fakeData);
+            await SendAsync(prod, 201);
         }
     }
 }

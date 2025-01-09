@@ -2,9 +2,9 @@
 using FruitStore.Application.Repositories;
 using FruitStore.Infrastructure.Interfaces;
 
-namespace FruitStore.Infrastructure.Services
+namespace FruitStore.Infrastructure.Handlers
 {
-    public class ProductService(IProductRepository productRepo) : IProductService
+    public class GetProductHandler(IProductRepository productRepo) : IProductService
     {
         private readonly IProductRepository _productRepo = productRepo;
 

@@ -7,5 +7,6 @@ namespace FruitStore.Application.Repositories
     {
         Task<ErrorOr<List<ProductResponse>>> GetAllProductsAsync();
         Task<ErrorOr<ProductResponse>> GetProductByIdAsync(Guid id);
+        Task<ErrorOr<ProductResponse>> CreateProductAsync(CreateProductRequest request);
     }
 }
