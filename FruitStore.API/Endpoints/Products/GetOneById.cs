@@ -1,12 +1,20 @@
 ﻿using FastEndpoints;
 using FruitStore.Application.DTOs;
-using FruitStore.Infrastructure.Interfaces;
+using FruitStore.Infrastructure.Features.Queries;
+using MediatR;
 
-namespace FruitStore.API.Endpoints.Products
+namespace FruitStore.API.Endpoints.Products;
+
+public sealed class GetOneById
 {
-    public class GetOneById(IProductService productService) : EndpointWithoutRequest<ProductResponse>
+    public sealed class Output
     {
-        private readonly IProductService _productService = productService;
+        public string Message { get; set; }
+        public ProductResponse Info { get; set; }
+    }
+    public sealed class ApiEndpoint(ISender mediator) : EndpointWithoutRequest<Output>
+    {
+        private readonly ISender _mediator = mediator;
         public override void Configure()
         {
             Get("/api/products/{id}");
@@ -17,9 +25,14 @@ namespace FruitStore.API.Endpoints.Products
         public override async Task HandleAsync(CancellationToken ct)
         {
             var id = Route<Guid>("id");
-            var res = await _productService.GetProductByIdAsync(id);
+            var query = new GetOneProductById.Query(id);
+            var res = await _mediator.Send(query);
 
-            await SendAsync(res);
+            await SendAsync(new Output
+            {
+                Message = "Get one product successfully!",
+                Info = res
+            });
         }
     }
 }

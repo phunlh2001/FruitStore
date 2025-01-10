@@ -1,12 +1,16 @@
-﻿using MediatR;
-
-namespace FruitStore.Application.DTOs
+﻿namespace FruitStore.Application.DTOs
 {
-    public class CreateProductRequest : IRequest<ProductResponse>
+    public class CreateProductRequest
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
-        public string CategoryName { get; set; }
+
+        public CategoryRequest Category { get; set; }
+    }
+
+    public class CategoryRequest
+    {
+        public Guid Id { get; set; }
     }
 }

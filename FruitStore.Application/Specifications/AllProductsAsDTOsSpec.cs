@@ -2,7 +2,7 @@
 using FruitStore.Application.DTOs;
 using FruitStore.Core.Entities;
 
-namespace FruitStore.Application.Features.Queries
+namespace FruitStore.Application.Specifications
 {
     public class AllProductsAsDTOsSpec : Specification<Product, ProductResponse>
     {

@@ -1,5 +1,6 @@
 ﻿@page "/fruit"
 @using Flurl.Http
+@using FruitStore.Web.Models
 @inject NavigationManager navigationManager
 
 <PageTitle>Fruit Store</PageTitle>
@@ -51,15 +52,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products = await "http://localhost:5192/api/products".GetJsonAsync<List<ProductResponse>>();
-    }
-
-    protected class ProductResponse
-    {
-        public Guid id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }
-        public string CategoryName { get; set; }
+        var res = await "http://localhost:5192/api/products/list".GetJsonAsync<ResInfo<List<ProductResponse>>>();
+        products = res.Info;
     }
 }

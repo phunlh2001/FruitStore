@@ -1,0 +1,65 @@
+﻿@page "/fruit/delete/{id}"
+@using Flurl.Http
+@using FruitStore.Web.Models
+@inject NavigationManager navigate
+
+<PageTitle>Delete Fruit</PageTitle>
+
+<h1>Delete A Fruit</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Fruit</h4>
+    <hr />
+
+    <form>
+        <div class="form-group">
+            <label class="control-label">Product Name</label>
+            <input class="form-control" value="@product?.Name" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Price</label>
+            <input class="form-control" value="@product?.Price.ToString("N0")vnd" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Description</label>
+            <input class="form-control" value="@product?.Description" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label">CategoryName</label>
+            <input class="form-control" value="@product?.CategoryName" readonly />
+        </div>
+        <br />
+        <input @onclick="Delete" value="Delete" class="btn btn-danger" />
+        <a href="/fruit" class="btn btn-outline-info">Back to List</a>
+    </form>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    protected class ProductResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public string CategoryName { get; set; }
+    }
+
+    private ProductResponse? product;
+    private string baseUrl = "http://localhost:5192";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await $"{baseUrl}/api/products/{Id}".GetJsonAsync<ResInfo<ProductResponse>>();
+        product = res.Info;
+    }
+
+    private async Task Delete() 
+    {
+        await $"{baseUrl}/api/products/delete/{Id}".DeleteAsync();
+        navigate.NavigateTo("/fruit");
+    }
+}

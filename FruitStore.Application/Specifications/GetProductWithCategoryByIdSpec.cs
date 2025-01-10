@@ -2,12 +2,13 @@
 using FruitStore.Application.DTOs;
 using FruitStore.Core.Entities;
 
-namespace FruitStore.Application.Features.Queries
+namespace FruitStore.Application.Specifications
 {
-    public class GetProductByIdSpec : Specification<Product, ProductResponse>
+    public class GetProductWithCategoryByIdSpec : Specification<Product, ProductResponse>
     {
-        public GetProductByIdSpec(Guid id)
+        public GetProductWithCategoryByIdSpec(Guid id)
         {
+            Query.Include(s => s.Category);
             Query.Where(s => s.Id == id);
             Query.Select(s => new ProductResponse
             {

@@ -1,16 +1,14 @@
 ﻿using FastEndpoints;
-using FruitStore.Application.DTOs;
-using FruitStore.Infrastructure.Features.Queries;
+using FruitStore.Infrastructure.Features.Commands;
 using MediatR;
 
 namespace FruitStore.API.Endpoints.Products;
 
-public sealed class GetList
+public sealed class DeleteOneById
 {
     public sealed class Output
     {
         public string Message { get; set; }
-        public List<ProductResponse> Info { get; set; }
     }
 
     public sealed class ApiEndpoint(ISender mediator) : EndpointWithoutRequest<Output>
@@ -18,20 +16,24 @@ public sealed class GetList
         private readonly ISender _mediator = mediator;
         public override void Configure()
         {
-            Get("/api/products/list");
+            Delete("api/products/delete/{id}");
             AllowAnonymous();
             Description(d => d.WithTags("Products"));
         }
 
         public override async Task HandleAsync(CancellationToken ct)
         {
-            var query = new GetProductList.Query();
-            var res = await _mediator.Send(query);
+            var id = Route<Guid>("id");
+            var command = new DeleteProductById.Command(id);
+            var res = await _mediator.Send(command);
 
+            if (res.IsError)
+            {
+                return;
+            }
             await SendAsync(new Output
             {
-                Message = "Get list successfully!",
-                Info = res
+                Message = "Delete successfully!"
             });
         }
     }

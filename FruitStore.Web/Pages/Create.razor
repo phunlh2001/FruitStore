@@ -1,27 +1,72 @@
 ﻿@page "/fruit/add"
+@using Flurl.Http
+@using FruitStore.Web.Models
+@inject NavigationManager navigate
 
 <PageTitle>Add new fruit</PageTitle>
 
 <h3>Add new fruit</h3>
+<hr />
 
-<form asp-action="Create" method="post">
-    Product Name: <input type="text" placeholder="Eg: Mango" class="form-control" />
+<form>
+    Product Name: <input type="text" @bind="ProductName" placeholder="Eg: Mango" class="form-control" />
     <br />
 
     Category:
-    <select asp-for="CategoryId" class="form-control"></select>
+    <select @bind="SelectedCategoryId" class="form-control">
+        @foreach (var ca in cates) 
+        {
+            <option value="@ca.Id">@ca.Name</option>
+        }
+    </select>
     <br />
 
-    Price: <input type="number" placeholder="VND" class="form-control" />
+    Price: <input type="number" @bind="ProductPrice" placeholder="VND" class="form-control" />
     <br />
 
-    Description: <input type="text" placeholder="Lorem..." class="form-control" />
+    Description: <input type="text" @bind="Description" placeholder="Lorem..." class="form-control" />
     <br />
 
-    <input type="submit" value="Create" class="btn btn-success">
+    <input @onclick="CreateNew" value="Create" class="btn btn-success">
     <a href="/fruit" class="btn btn-outline-primary">Back to home</a>
 </form>
 
 @code {
-    
+    string baseUrl = "http://localhost:5192/api";
+
+    protected class CateRes
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    private List<CateRes> cates = [];
+
+    private Guid SelectedCategoryId;
+    private string ProductName;
+    private decimal ProductPrice;
+    private string Description;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await $"{baseUrl}/categories".GetJsonAsync<ResInfo<List<CateRes>>>();
+        cates = res.Info;
+    }
+
+    private async Task CreateNew() 
+    {
+        var product = new ProductRequest
+        {
+            Name = ProductName,
+            Price = ProductPrice,
+            Description = Description,
+            Category = new Category
+            {
+                Id = SelectedCategoryId
+            }
+        };
+
+        await $"{baseUrl}/products/create".PostJsonAsync(product).ReceiveJson<ResInfo<ProductResponse>>();
+        navigate.NavigateTo("/fruit");
+    }
 }

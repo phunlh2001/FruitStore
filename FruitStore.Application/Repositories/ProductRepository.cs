@@ -1,7 +1,8 @@
 ﻿using Ardalis.Specification.EntityFrameworkCore;
 using ErrorOr;
+using FruitStore.Application.Contracts.Product;
 using FruitStore.Application.DTOs;
-using FruitStore.Application.Features.Queries;
+using FruitStore.Application.Specifications;
 using FruitStore.Core.Context;
 using FruitStore.Core.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -25,11 +26,7 @@ namespace FruitStore.Application.Repositories
                 Name = request.Name,
                 Price = request.Price,
                 Description = request.Description,
-                Category = new Category
-                {
-                    Id = Guid.NewGuid(),
-                    Name = request.CategoryName,
-                }
+                CategoryId = request.Category.Id,
             };
 
             _context.Products.Add(prod);
@@ -39,10 +36,23 @@ namespace FruitStore.Application.Repositories
             {
                 Id = prod.Id,
                 Name = request.Name,
-                Description = request.Description,
                 Price = request.Price,
-                CategoryName = request.CategoryName
+                Description = request.Description
             };
+        }
+
+        public async Task<ErrorOr<EmptyResponse>> DeleteProductAsync(Guid id)
+        {
+            var prod = await _context.Products.WithSpecification(new GetOnlyProductByIdSpec(id)).FirstOrDefaultAsync();
+            if (prod == null)
+            {
+                return Error.NotFound($"Not found product with id {id}");
+            }
+
+            _context.Products.Remove(prod);
+            await _context.SaveChangesAsync();
+
+            return new EmptyResponse();
         }
 
         public async Task<ErrorOr<List<ProductResponse>>> GetAllProductsAsync()
@@ -57,7 +67,7 @@ namespace FruitStore.Application.Repositories
 
         public async Task<ErrorOr<ProductResponse>> GetProductByIdAsync(Guid id)
         {
-            var data = await _context.Products.WithSpecification(new GetProductByIdSpec(id)).FirstOrDefaultAsync();
+            var data = await _context.Products.WithSpecification(new GetProductWithCategoryByIdSpec(id)).FirstOrDefaultAsync();
             if (data == null)
             {
                 return Error.NotFound("Failed to get product by id!");

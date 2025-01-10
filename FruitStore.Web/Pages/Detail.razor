@@ -1,5 +1,6 @@
 ﻿@page "/fruit/detail/{id}"
 @using Flurl.Http
+@using FruitStore.Web.Models
 
 <PageTitle>View detail</PageTitle>
 
@@ -16,13 +17,6 @@
 </dl>
 
 @code {
-    private ProductResponse? product;
-
-    protected override async Task OnInitializedAsync()
-    {
-        product = await $"http://localhost:5192/api/products/{Id}".GetJsonAsync<ProductResponse>();
-    }
-
     [Parameter]
     public string Id { get; set; }
 
@@ -33,5 +27,13 @@
         public decimal Price { get; set; }
         public string Description { get; set; }
         public string CategoryName { get; set; }
+    }
+
+    private ProductResponse? product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await $"http://localhost:5192/api/products/{Id}".GetJsonAsync<ResInfo<ProductResponse>>();
+        product = res.Info;
     }
 }

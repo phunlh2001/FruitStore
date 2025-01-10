@@ -1,10 +1,10 @@
-using System.Reflection;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using FruitStore.Application.Contracts.Category;
+using FruitStore.Application.Contracts.Product;
 using FruitStore.Application.Repositories;
 using FruitStore.Core.Context;
-using FruitStore.Infrastructure.Handlers;
-using FruitStore.Infrastructure.Interfaces;
+using FruitStore.Infrastructure.Features.Commands;
 
 var originName = "AllowAllOrigins";
 
@@ -21,15 +21,15 @@ builder.Services.AddCors(c =>
 
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
-    cfg.RegisterServicesFromAssemblyContaining<CreateProductHandler>();
+    cfg.RegisterServicesFromAssemblyContaining<CreateProduct.Handler>();
+    cfg.RegisterServicesFromAssemblyContaining<DeleteProductById.Handler>();
 });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddFastEndpoints().AddSwaggerDocument();
 
-builder.Services.AddScoped<IProductService, GetProductHandler>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 app.UseFastEndpoints().UseSwaggerGen();
