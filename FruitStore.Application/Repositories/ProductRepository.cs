@@ -13,7 +13,7 @@ namespace FruitStore.Application.Repositories
     {
         private readonly AppDbContext _context = context;
 
-        public async Task<ErrorOr<ProductResponse>> CreateProductAsync(CreateProductRequest request)
+        public async Task<ErrorOr<EmptyResponse>> CreateProductAsync(CreateProductRequest request)
         {
             if (request == null)
             {
@@ -32,13 +32,7 @@ namespace FruitStore.Application.Repositories
             _context.Products.Add(prod);
             await _context.SaveChangesAsync();
 
-            return new ProductResponse
-            {
-                Id = prod.Id,
-                Name = request.Name,
-                Price = request.Price,
-                Description = request.Description
-            };
+            return new EmptyResponse();
         }
 
         public async Task<ErrorOr<EmptyResponse>> DeleteProductAsync(Guid id)

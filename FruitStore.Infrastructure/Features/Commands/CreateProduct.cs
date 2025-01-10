@@ -6,13 +6,13 @@ namespace FruitStore.Infrastructure.Features.Commands;
 
 public static class CreateProduct
 {
-    public sealed record Command(string Name, decimal Price, string Description, CategoryRequest Category) : IRequest<ProductResponse>;
+    public sealed record Command(string Name, decimal Price, string Description, CategoryRequest Category) : IRequest<EmptyResponse>;
 
-    public sealed class Handler(IProductRepository productRepo) : IRequestHandler<Command, ProductResponse>
+    public sealed class Handler(IProductRepository productRepo) : IRequestHandler<Command, EmptyResponse>
     {
         private readonly IProductRepository _productRepo = productRepo;
 
-        public async Task<ProductResponse> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<EmptyResponse> Handle(Command request, CancellationToken cancellationToken)
         {
             var newProd = new CreateProductRequest
             {

@@ -19,7 +19,6 @@ public sealed class AddNew
     public sealed class Output
     {
         public string Message { get; set; }
-        public ProductResponse Info { get; set; }
     }
 
     public sealed class ApiEndpoint(ISender mediator) : Endpoint<Input, Output>
@@ -39,8 +38,7 @@ public sealed class AddNew
 
             await SendAsync(new Output
             {
-                Message = "Create successfully!",
-                Info = prod
+                Message = "Create successfully!"
             }, 201);
         }
     }

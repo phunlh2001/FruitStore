@@ -7,7 +7,7 @@ namespace FruitStore.Application.Contracts.Product
     {
         Task<ErrorOr<List<ProductResponse>>> GetAllProductsAsync();
         Task<ErrorOr<ProductResponse>> GetProductByIdAsync(Guid id);
-        Task<ErrorOr<ProductResponse>> CreateProductAsync(CreateProductRequest request);
+        Task<ErrorOr<EmptyResponse>> CreateProductAsync(CreateProductRequest request);
         Task<ErrorOr<EmptyResponse>> DeleteProductAsync(Guid id);
     }
 }
