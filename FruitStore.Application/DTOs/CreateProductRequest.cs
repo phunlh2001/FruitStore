@@ -8,9 +8,4 @@
 
         public CategoryRequest Category { get; set; }
     }
-
-    public class CategoryRequest
-    {
-        public Guid Id { get; set; }
-    }
 }

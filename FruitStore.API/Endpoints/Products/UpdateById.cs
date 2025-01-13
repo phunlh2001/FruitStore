@@ -5,7 +5,7 @@ using MediatR;
 
 namespace FruitStore.API.Endpoints.Products;
 
-public sealed class AddNew
+public sealed class UpdateById
 {
     public sealed class Input
     {
@@ -26,20 +26,21 @@ public sealed class AddNew
         private readonly ISender _mediator = mediator;
         public override void Configure()
         {
-            Post("/api/products/create");
+            Put("/api/products/update/{id}");
             AllowAnonymous();
             Description(t => t.WithTags("Products"));
         }
 
         public override async Task HandleAsync(Input req, CancellationToken ct)
         {
-            var command = new CreateProduct.Command(req.Name, req.Price, req.Description, req.Category);
+            var id = Route<Guid>("id");
+            var command = new UpdateProductById.Command(id, req.Name, req.Price, req.Description, req.Category);
             await _mediator.Send(command);
 
             await SendAsync(new Output
             {
-                Message = "Create successfully!"
-            }, 201);
+                Message = "Update successfully!"
+            });
         }
     }
 }

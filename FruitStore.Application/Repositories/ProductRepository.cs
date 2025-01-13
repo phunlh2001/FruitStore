@@ -68,5 +68,27 @@ namespace FruitStore.Application.Repositories
             }
             return Task.FromResult(data).Result;
         }
+
+        public async Task<ErrorOr<EmptyResponse>> UpdateProductAsync(Guid id, UpdateProductRequest request)
+        {
+            var data = await _context.Products.WithSpecification(new GetProductWithCategoryByIdSpec(id)).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return Error.NotFound("Failed to get product by id!");
+            }
+
+            var prod = new Product
+            {
+                Id = id,
+                Description = request.Description,
+                Name = request.Name,
+                Price = request.Price,
+                CategoryId = request.Category.Id,
+            };
+
+            _context.Products.Update(prod);
+            await _context.SaveChangesAsync();
+            return new EmptyResponse();
+        }
     }
 }
