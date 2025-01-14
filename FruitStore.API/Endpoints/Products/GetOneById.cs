@@ -7,12 +7,16 @@ namespace FruitStore.API.Endpoints.Products;
 
 public sealed class GetOneById
 {
+    public sealed class Input
+    {
+        public Guid Id { get; set; }
+    }
     public sealed class Output
     {
         public string Message { get; set; }
         public ProductResponse Info { get; set; }
     }
-    public sealed class ApiEndpoint(ISender mediator) : EndpointWithoutRequest<Output>
+    public sealed class ApiEndpoint(ISender mediator) : Endpoint<Input, Output>
     {
         private readonly ISender _mediator = mediator;
         public override void Configure()
@@ -22,10 +26,9 @@ public sealed class GetOneById
             Description(d => d.WithTags("Products"));
         }
 
-        public override async Task HandleAsync(CancellationToken ct)
+        public override async Task HandleAsync(Input request, CancellationToken ct)
         {
-            var id = Route<Guid>("id");
-            var query = new GetOneProductById.Query(id);
+            var query = new GetOneProductById.Query(request.Id);
             var res = await _mediator.Send(query);
 
             await SendAsync(new Output

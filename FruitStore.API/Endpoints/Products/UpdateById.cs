@@ -9,6 +9,7 @@ public sealed class UpdateById
 {
     public sealed class Input
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
@@ -33,8 +34,7 @@ public sealed class UpdateById
 
         public override async Task HandleAsync(Input req, CancellationToken ct)
         {
-            var id = Route<Guid>("id");
-            var command = new UpdateProductById.Command(id, req.Name, req.Price, req.Description, req.Category);
+            var command = new UpdateProductById.Command(req.Id, req.Name, req.Price, req.Description, req.Category);
             await _mediator.Send(command);
 
             await SendAsync(new Output
